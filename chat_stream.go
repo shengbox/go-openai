@@ -27,10 +27,14 @@ type ChatCompletionStreamResponse struct {
 	PromptAnnotations []PromptAnnotation           `json:"prompt_annotations,omitempty"`
 }
 
+type CustomerChatCompletionStreamResponse struct {
+	Completion ChatCompletionStreamResponse `json:"completion"`
+}
+
 // ChatCompletionStream
 // Note: Perhaps it is more elegant to abstract Stream using generics.
 type ChatCompletionStream struct {
-	*streamReader[ChatCompletionStreamResponse]
+	*streamReader[CustomerChatCompletionStreamResponse]
 }
 
 // CreateChatCompletionStream — API call to create a chat completion w/ streaming
@@ -53,7 +57,7 @@ func (c *Client) CreateChatCompletionStream(
 		return nil, err
 	}
 
-	resp, err := sendRequestStream[ChatCompletionStreamResponse](c, req)
+	resp, err := sendRequestStream[CustomerChatCompletionStreamResponse](c, req)
 	if err != nil {
 		return
 	}

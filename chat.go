@@ -71,6 +71,9 @@ type FunctionCall struct {
 
 // ChatCompletionRequest represents a request structure for chat completion API.
 type ChatCompletionRequest struct {
+	TimeStamp        int64                   `json:"timeStamp"`
+	TppBizNo         string                  `json:"tppBizNo"`
+	EndUser          string                  `json:"endUser"`
 	Model            string                  `json:"model"`
 	Messages         []ChatCompletionMessage `json:"messages"`
 	MaxTokens        int                     `json:"max_tokens,omitempty"`
@@ -146,11 +149,19 @@ type ChatCompletionResponse struct {
 	httpHeader
 }
 
+type CustomerChatCompletionResponse struct {
+	Completion ChatCompletionResponse `json:"completion"`
+	ResultCode any                    `json:"resultCode"`
+	ErrorMsg   any                    `json:"errorMsg"`
+
+	httpHeader
+}
+
 // CreateChatCompletion — API call to Create a completion for the chat message.
 func (c *Client) CreateChatCompletion(
 	ctx context.Context,
 	request ChatCompletionRequest,
-) (response ChatCompletionResponse, err error) {
+) (response CustomerChatCompletionResponse, err error) {
 	if request.Stream {
 		err = ErrChatCompletionStreamNotSupported
 		return
